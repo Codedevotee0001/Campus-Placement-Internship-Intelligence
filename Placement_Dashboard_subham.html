@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Campus Placement & Internship Intelligence Dashboard</title>
+  <!-- Supports both Google Antigravity iframe & external browser -->
+  <script src="https://www.gstatic.com/antigravity/web/dev/tailwindcss.min.js"></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: #0b1120;
+      color: #f8fafc;
+      min-height: 100vh;
+    }
+    .card-glass {
+      background: rgba(30, 41, 59, 0.75);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .badge-selected { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+    .badge-shortlisted { background: rgba(245, 158, 11, 0.15); color: #fbbf24; border: 1px solid rgba(245, 158, 11, 0.3); }
+    .badge-applied { background: rgba(59, 130, 246, 0.15); color: #60a5fa; border: 1px solid rgba(59, 130, 246, 0.3); }
+    .badge-rejected { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.3); }
+    .badge-unapplied { background: rgba(148, 163, 184, 0.15); color: #94a3b8; border: 1px solid rgba(148, 163, 184, 0.3); }
+    .filter-btn.active {
+      background: #2563eb !important;
+      color: #ffffff !important;
+      border-color: #60a5fa !important;
+      box-shadow: 0 0 14px rgba(37, 99, 235, 0.45);
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+  </style>
+</head>
+<body class="p-3 sm:p-5 md:p-8">
+  <div class="max-w-7xl mx-auto space-y-6">
+
+    <!-- Header Section -->
+    <header class="card-glass rounded-2xl p-5 md:p-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4 shadow-2xl border-t border-t-blue-500/30">
+      <div>
+        <div class="flex items-center gap-3.5">
+          <span class="text-3xl sm:text-4xl p-2.5 rounded-2xl bg-blue-500/10 border border-blue-500/20">🎓</span>
+          <div>
+            <h1 class="text-xl sm:text-2xl md:text-3xl font-black tracking-tight bg-gradient-to-r from-blue-400 via-teal-300 to-indigo-300 bg-clip-text text-transparent">
+              Campus Placement &amp; Internship Intelligence
+            </h1>
+            <p class="text-xs md:text-sm text-slate-400 mt-0.5">
+              University Career Portal Analytics • Project by <span class="text-blue-400 font-bold">Ritika Kalra</span> • Database: <code class="bg-slate-800/80 px-2 py-0.5 rounded text-xs font-mono text-emerald-400 border border-slate-700">internship_management</code>
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="flex flex-wrap items-center gap-3">
+        <button onclick="toggleSqlModal()" class="text-xs font-semibold px-4 py-2.5 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-500 hover:to-indigo-500 text-white shadow-lg shadow-blue-500/25 border border-blue-400/30 transition flex items-center gap-2 cursor-pointer">
+          <span>📜</span> View 16 SQL Queries (Exact Order)
+        </button>
+        <span class="text-xs px-3 py-2 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 font-semibold flex items-center gap-1.5">
+          <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Live 16 Queries Synced
+        </span>
+      </div>
+    </header>
+
+    <!-- Top KPI Cards (Mapped to Queries 1, 4, 6, 7, 9, 10, 16) -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      <!-- KPI 1: Query 1 & 2 -->
+      <div class="card-glass rounded-2xl p-5 shadow-lg border-l-4 border-l-blue-500 hover:translate-y-[-2px] transition duration-200">
+        <div class="flex justify-between items-start">
+          <span class="text-xs uppercase font-bold tracking-wider text-slate-400">Total Registered</span>
+          <span class="text-xl">👥</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-black text-white">20</span>
+          <span class="text-xs text-slate-400 font-medium">Students</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1.5 font-medium">Query 1 (Age) • Query 2 (18 Intern Applicants)</p>
+      </div>
+
+      <!-- KPI 2: Query 6 & 7 -->
+      <div class="card-glass rounded-2xl p-5 shadow-lg border-l-4 border-l-emerald-500 hover:translate-y-[-2px] transition duration-200">
+        <div class="flex justify-between items-start">
+          <span class="text-xs uppercase font-bold tracking-wider text-slate-400">Placement Success</span>
+          <span class="text-xl">🎯</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-black text-emerald-400">70.0%</span>
+          <span class="text-xs text-slate-400 font-medium">(14 Placed)</span>
+        </div>
+        <p class="text-[11px] text-emerald-400/90 mt-1.5 font-medium">Query 6 (Selected) • Query 7 (Status Count)</p>
+      </div>
+
+      <!-- KPI 3: Query 9 & 16 -->
+      <div class="card-glass rounded-2xl p-5 shadow-lg border-l-4 border-l-purple-500 hover:translate-y-[-2px] transition duration-200">
+        <div class="flex justify-between items-start">
+          <span class="text-xs uppercase font-bold tracking-wider text-slate-400">Avg Placement CTC</span>
+          <span class="text-xl">💼</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-black text-purple-400">7.48</span>
+          <span class="text-xs text-slate-400 font-semibold">LPA</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1.5 font-medium">Query 9 Benchmark • Query 16 (Top 4 Above Avg)</p>
+      </div>
+
+      <!-- KPI 4: Query 4 & 10 -->
+      <div class="card-glass rounded-2xl p-5 shadow-lg border-l-4 border-l-amber-500 hover:translate-y-[-2px] transition duration-200">
+        <div class="flex justify-between items-start">
+          <span class="text-xs uppercase font-bold tracking-wider text-slate-400">Top Monthly Stipend</span>
+          <span class="text-xl">🏆</span>
+        </div>
+        <div class="mt-2 flex items-baseline gap-2">
+          <span class="text-3xl font-black text-amber-400">₹12,000</span>
+          <span class="text-xs text-slate-400 font-medium">/ mo</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1.5 font-medium">Query 4 (> ₹9k) • Query 10 (AIgen Max Stipend)</p>
+      </div>
+    </div>
+
+    <!-- Charts Row 1: Placement Benchmark, Spread & Domains -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+      <!-- Chart 1: Company Packages vs Benchmark (Query 3, 9, 15, 16) -->
+      <div class="card-glass rounded-2xl p-6 shadow-xl space-y-4">
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span>🏢</span> Average Packages &amp; Salary Spread (Query 9, 15 &amp; 16)
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Threshold: 7.48 LPA University Average (Answers Query 16 Above-Average Recruiters)</p>
+          </div>
+          <span class="text-[11px] px-2.5 py-1 rounded-lg bg-blue-500/10 text-blue-400 font-semibold border border-blue-500/20">Query 9, 15, 16</span>
+        </div>
+
+        <!-- Relative Benchmark Indicator -->
+        <div class="relative pt-2 pb-1 space-y-3">
+          <!-- Benchmark Line Indicator -->
+          <div class="text-xs flex justify-between text-slate-400 px-1 border-b border-slate-700/60 pb-1.5">
+            <span class="font-semibold">Company Name &amp; Spread (Query 15)</span>
+            <span class="text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20">University Benchmark: 7.48 LPA</span>
+          </div>
+
+          <!-- Company 1 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-200">1. AIgen Labs <span class="text-[10px] text-slate-400 font-normal">(Spread: 0.70 LPA)</span></span>
+              <span class="font-bold text-emerald-400">9.10 LPA <span class="text-[10px] text-emerald-500">▲ +1.62 (Above Avg)</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-gradient-to-r from-blue-500 to-emerald-400 h-3 rounded-full" style="width: 95.8%"></div>
+            </div>
+          </div>
+
+          <!-- Company 2 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-200">2. CloudVerse Technologies <span class="text-[10px] text-slate-400 font-normal">(Spread: 0.70 LPA)</span></span>
+              <span class="font-bold text-emerald-400">8.35 LPA <span class="text-[10px] text-emerald-500">▲ +0.87 (Above Avg)</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-gradient-to-r from-blue-500 to-emerald-400 h-3 rounded-full" style="width: 87.9%"></div>
+            </div>
+          </div>
+
+          <!-- Company 3 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-200">3. CyberFort Systems <span class="text-[10px] text-slate-400 font-normal">(Spread: 0.50 LPA)</span></span>
+              <span class="font-bold text-emerald-400">7.75 LPA <span class="text-[10px] text-emerald-500">▲ +0.27 (Above Avg)</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-gradient-to-r from-blue-500 to-emerald-400 h-3 rounded-full" style="width: 81.6%"></div>
+            </div>
+          </div>
+
+          <!-- Company 4 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-200">4. DataSphere Solutions <span class="text-[10px] text-amber-400 font-medium">(Max Spread: 1.70 LPA)</span></span>
+              <span class="font-bold text-emerald-400">7.50 LPA <span class="text-[10px] text-emerald-500">▲ +0.02 (Above Avg)</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-gradient-to-r from-blue-500 to-emerald-400 h-3 rounded-full" style="width: 78.9%"></div>
+            </div>
+          </div>
+
+          <!-- Company 5 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-300">5. VisionAR Studios <span class="text-[10px] text-slate-400 font-normal">(Spread: 0.80 LPA)</span></span>
+              <span class="font-bold text-slate-300">7.40 LPA <span class="text-[10px] text-slate-500">▼ -0.08</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-slate-600 h-3 rounded-full" style="width: 77.9%"></div>
+            </div>
+          </div>
+
+          <!-- Company 6 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-300">6. InnovaSoft Pvt Ltd <span class="text-[10px] text-slate-400 font-normal">(Spread: 0.30 LPA)</span></span>
+              <span class="font-bold text-slate-300">6.65 LPA <span class="text-[10px] text-slate-500">▼ -0.83</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-slate-600 h-3 rounded-full" style="width: 70.0%"></div>
+            </div>
+          </div>
+
+          <!-- Company 7 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-300">7. UXCraft Design Hub <span class="text-[10px] text-slate-400 font-normal">(Spread: 0.60 LPA)</span></span>
+              <span class="font-bold text-slate-300">6.50 LPA <span class="text-[10px] text-slate-500">▼ -0.98</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-slate-600 h-3 rounded-full" style="width: 68.4%"></div>
+            </div>
+          </div>
+
+          <!-- Company 8 -->
+          <div>
+            <div class="flex justify-between text-xs mb-1">
+              <span class="font-semibold text-slate-300">8. TechNova Pvt Ltd <span class="text-[10px] text-slate-400 font-normal">(Spread: 1.20 LPA)</span></span>
+              <span class="font-bold text-slate-300">6.43 LPA <span class="text-[10px] text-slate-500">▼ -1.05</span></span>
+            </div>
+            <div class="h-3 w-full bg-slate-800 rounded-full overflow-hidden flex">
+              <div class="bg-slate-600 h-3 rounded-full" style="width: 67.7%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Chart 2: Top Paying Domains & Internship Stipends (Query 4, 10, 11) -->
+      <div class="card-glass rounded-2xl p-6 shadow-xl space-y-5">
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-base font-bold text-white flex items-center gap-2">
+              <span>💰</span> Internship Stipend Range &amp; Domains (Query 4, 10 &amp; 11)
+            </h2>
+            <p class="text-xs text-slate-400 mt-0.5">Max &amp; Min Stipends (Query 10) • Filter &gt; ₹9,000 (Query 4)</p>
+          </div>
+          <span class="text-[11px] px-2.5 py-1 rounded-lg bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20">Query 4, 10, 11</span>
+        </div>
+
+        <!-- Stipend Comparison Cards (Query 4 & 10) -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+          <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/60 text-center hover:border-emerald-500/40 transition">
+            <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">AIgen Labs</span>
+            <div class="text-base font-extrabold text-emerald-400 mt-1">₹12,000</div>
+            <span class="text-[10px] text-slate-400">Min: ₹9,000</span>
+          </div>
+          <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/60 text-center hover:border-emerald-500/40 transition">
+            <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">VisionAR</span>
+            <div class="text-base font-extrabold text-emerald-400 mt-1">₹11,500</div>
+            <span class="text-[10px] text-slate-400">Min: ₹11,000</span>
+          </div>
+          <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/60 text-center hover:border-emerald-500/40 transition">
+            <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">CloudVerse</span>
+            <div class="text-base font-extrabold text-emerald-400 mt-1">₹10,000</div>
+            <span class="text-[10px] text-slate-400">Min: ₹9,500</span>
+          </div>
+          <div class="bg-slate-800/80 p-3.5 rounded-xl border border-slate-700/60 text-center hover:border-emerald-500/40 transition">
+            <span class="text-[11px] text-slate-400 uppercase font-bold tracking-wider">TechNova</span>
+            <div class="text-base font-extrabold text-emerald-400 mt-1">₹10,000</div>
+            <span class="text-[10px] text-slate-400">Min: ₹7,000</span>
+          </div>
+        </div>
+
+        <!-- Top 3 Domains (Query 11) -->
+        <div class="pt-3 border-t border-slate-800">
+          <div class="flex justify-between items-center mb-3">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-400 flex items-center gap-1.5">
+              <span>🏆</span> Query 11: Top 3 Highest Paying Tech Domains
+            </h3>
+            <span class="text-[11px] text-blue-400 font-bold bg-blue-500/10 px-2 py-0.5 rounded border border-blue-500/20">Average Package</span>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-800/60 border border-slate-700/50">
+              <div class="flex items-center gap-3">
+                <span class="w-7 h-7 rounded-full bg-amber-500/20 text-amber-400 font-black text-xs flex items-center justify-center border border-amber-500/30">1</span>
+                <div>
+                  <div class="text-xs font-bold text-white">Artificial Intelligence / Machine Learning</div>
+                  <div class="text-[11px] text-slate-400">3 Openings • AIgen Labs</div>
+                </div>
+              </div>
+              <span class="text-sm font-black text-emerald-400 font-mono">9.25 LPA</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-800/60 border border-slate-700/50">
+              <div class="flex items-center gap-3">
+                <span class="w-7 h-7 rounded-full bg-slate-500/20 text-slate-300 font-black text-xs flex items-center justify-center border border-slate-500/30">2</span>
+                <div>
+                  <div class="text-xs font-bold text-white">Big Data Engineering</div>
+                  <div class="text-[11px] text-slate-400">1 Opening • DataSphere Solutions</div>
+                </div>
+              </div>
+              <span class="text-sm font-black text-emerald-400 font-mono">8.50 LPA</span>
+            </div>
+
+            <div class="flex items-center justify-between p-3 rounded-xl bg-slate-800/60 border border-slate-700/50">
+              <div class="flex items-center gap-3">
+                <span class="w-7 h-7 rounded-full bg-amber-700/20 text-amber-500 font-black text-xs flex items-center justify-center border border-amber-700/30">3</span>
+                <div>
+                  <div class="text-xs font-bold text-white">Cloud Computing &amp; DevOps</div>
+                  <div class="text-[11px] text-slate-400">2 Openings • CloudVerse Technologies</div>
+                </div>
+              </div>
+              <span class="text-sm font-black text-emerald-400 font-mono">8.35 LPA</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Candidate Recruitment Tracker & Interactive Filter Bar (Direct Query Mappings) -->
+    <div class="card-glass rounded-2xl p-6 shadow-xl space-y-5">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div>
+          <h2 class="text-lg font-bold text-white flex items-center gap-2">
+            <span>📋</span> Interactive Candidate &amp; Recruitment Tracker
+          </h2>
+          <p class="text-xs text-slate-400 mt-0.5">
+            Click any filter pill below to instantly see the real-time output of that specific SQL Query:
+          </p>
+        </div>
+
+        <!-- Search Input -->
+        <input 
+          type="text" 
+          id="searchBox" 
+          onkeyup="applyFilters()" 
+          placeholder="🔍 Search student, dept, company or role..." 
+          class="text-xs bg-slate-900 text-white placeholder-slate-500 border border-slate-700 rounded-xl px-3.5 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500 w-full md:w-80 shadow-inner"
+        >
+      </div>
+
+      <!-- Quick 1-Click Query Filter Pills in Order -->
+      <div class="flex flex-wrap gap-2 text-xs">
+        <button onclick="setFilter('ALL', this)" class="filter-btn active px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          All Students (20)
+        </button>
+        <button onclick="setFilter('Q2_INTERN_APPLIED', this)" class="filter-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          Query 2: Applied for Internship (18)
+        </button>
+        <button onclick="setFilter('Q5_INTERN_4', this)" class="filter-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          Query 5: Internship ID #4 (2)
+        </button>
+        <button onclick="setFilter('Q6_SELECTED', this)" class="filter-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          Query 6: Placed Students (14)
+        </button>
+        <button onclick="setFilter('Q8_MCA_9', this)" class="filter-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          Query 8: MCA CGPA &gt; 9 (4)
+        </button>
+        <button onclick="setFilter('Q12_TIER1', this)" class="filter-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          Query 12: Honors 9.0+ CGPA (6)
+        </button>
+        <button onclick="setFilter('Q13_UNAPPLIED', this)" class="filter-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          Query 13: Unapplied Students (2)
+        </button>
+        <button onclick="setFilter('Q14_DUAL', this)" class="filter-btn px-3 py-1.5 rounded-lg border border-slate-700 bg-slate-800 text-slate-300 hover:bg-slate-700 transition cursor-pointer font-medium">
+          Query 14: Dual Offers (4)
+        </button>
+      </div>
+
+      <!-- Table Section -->
+      <div class="overflow-x-auto rounded-xl border border-slate-700/60 shadow-inner">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="bg-slate-800/90 text-slate-400 uppercase tracking-wider text-[11px] border-b border-slate-700">
+              <th class="py-3 px-4">Student Name</th>
+              <th class="py-3 px-4">Age (Query 1)</th>
+              <th class="py-3 px-4">Department &amp; Spec</th>
+              <th class="py-3 px-4">Academic CGPA (Query 8/12)</th>
+              <th class="py-3 px-4">Company &amp; Role (Query 3)</th>
+              <th class="py-3 px-4">Package / Stipend</th>
+              <th class="py-3 px-4 text-right">Status (Query 7)</th>
+            </tr>
+          </thead>
+          <tbody id="studentTableBody" class="divide-y divide-slate-800 bg-slate-900/60">
+            <!-- Populated by JavaScript -->
+          </tbody>
+        </table>
+      </div>
+      <div id="tableCount" class="text-[11px] text-slate-400 text-right font-medium">Showing 20 of 20 students</div>
+    </div>
+
+  </div>
+
+  <!-- SQL Modal Window with All 16 Queries in EXACT USER ORDER -->
+  <div id="sqlModal" class="fixed inset-0 bg-black/80 backdrop-blur-md z-50 hidden flex items-center justify-center p-3 sm:p-6">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      
+      <!-- Modal Header -->
+      <div class="p-5 border-b border-slate-800 flex justify-between items-center bg-slate-900/90">
+        <div class="flex items-center gap-3">
+          <span class="text-2xl p-2 rounded-xl bg-blue-500/10 border border-blue-500/20">📜</span>
+          <div>
+            <h3 class="text-base md:text-lg font-bold text-white">
+              All 16 SQL Queries in Exact Project Order
+            </h3>
+            <p class="text-xs text-slate-400">Directly from <code class="text-emerald-400">internship_management</code> database • 100% synchronized with dashboard</p>
+          </div>
+        </div>
+        <button onclick="toggleSqlModal()" class="w-9 h-9 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white flex items-center justify-center font-bold text-sm cursor-pointer transition">✕</button>
+      </div>
+
+      <!-- Search inside SQL Modal -->
+      <div class="px-5 py-3 bg-slate-950 border-b border-slate-800">
+        <input 
+          type="text" 
+          id="sqlSearchBox" 
+          onkeyup="filterSqlQueries()" 
+          placeholder="Search queries by number (e.g. Query 1, Query 15) or keywords (JOIN, GROUP BY, CGPA)..." 
+          class="w-full text-xs bg-slate-900 text-white placeholder-slate-500 border border-slate-700 rounded-xl px-3.5 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 font-sans"
+        >
+      </div>
+
+      <!-- Modal Body (All 16 Queries in 1-to-1 exact user sequence) -->
+      <div id="sqlQueriesContainer" class="p-5 overflow-y-auto space-y-4 text-xs font-mono text-slate-300">
+
+        <!-- Query 1 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 1: Age of all the student</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Date Function</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Calculates each student's current age using TIMESTAMPDIFF with CURDATE(). Powers the 'Age' column in the candidate table.</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    first_name,
+    last_name,
+    dob,
+    TIMESTAMPDIFF(YEAR, dob, CURDATE()) AS age
+FROM student;</pre>
+        </div>
+
+        <!-- Query 2 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 2: List of students who have applied for at least one internship</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">JOIN &amp; IS NOT NULL</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Finds all active candidates who submitted at least one internship application (18 students).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT DISTINCT CONCAT(s.first_name, ' ', s.last_name) AS student_name
+FROM student s
+JOIN application a ON s.student_id = a.student_id
+WHERE a.internship_id IS NOT NULL;</pre>
+        </div>
+
+        <!-- Query 3 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 3: Show all placements with company name and package offered</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">ORDER BY DESC</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Lists all full-time placement openings with company details ordered by package LPA.</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT p.placement_id, c.company_name, p.title, p.domain, p.package_lpa, p.location 
+FROM placement p 
+JOIN company c ON p.company_id = c.company_id 
+ORDER BY p.package_lpa DESC;</pre>
+        </div>
+
+        <!-- Query 4 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 4: List all internships with stipend > 9000</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">WHERE Filter</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Retrieves high-paying internships offering monthly stipends strictly above ₹9,000 (Powers the Top Stipend card).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT i.title, c.company_name, i.stipend, i.location
+FROM internship i
+JOIN company c ON i.company_id = c.company_id
+WHERE i.stipend > 9000;</pre>
+        </div>
+
+        <!-- Query 5 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 5: Students applied for a particular internship (internship_id = 4)</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Targeted JOIN</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Filters students who targeted the Data Analyst internship role at DataSphere Solutions (Ritika Kalra, Aman Sharma).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT s.first_name, s.last_name, a.status
+FROM application a
+JOIN student s ON a.student_id = s.student_id
+WHERE a.internship_id = 4;</pre>
+        </div>
+
+        <!-- Query 6 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 6: Students selected for placements</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Multi-Table JOIN</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Identifies all 14 candidates who received confirmed placement offers across visiting recruiters.</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT s.first_name, s.last_name, p.title, c.company_name
+FROM application a
+JOIN student s ON a.student_id = s.student_id
+JOIN placement p ON a.placement_id = p.placement_id
+JOIN company c ON p.company_id = c.company_id
+WHERE a.status = 'Selected';</pre>
+        </div>
+
+        <!-- Query 7 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 7: Count of applications by status</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">GROUP BY status</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Evaluates application funnel distribution (Selected: 14, Shortlisted: 7, Applied: 11, Rejected: 1).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT status, COUNT(*) AS total
+FROM application
+GROUP BY status;</pre>
+        </div>
+
+        <!-- Query 8 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 8: List all MCA students with CGPA > 9</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Academic Merit</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Filters high distinction MCA candidates (Ritika Kalra: 9.0, Neha Verma: 9.2, Priya Singh: 9.1, Simran Kaur: 9.1).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT first_name, last_name, department, graduation_cgpa
+FROM student
+WHERE department = 'MCA' AND graduation_cgpa >= 9;</pre>
+        </div>
+
+        <!-- Query 9 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 9: Average placement package offered by each company</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Recruiter Benchmark</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Powers the core Company Average Packages bar chart showing CTCs across all 8 companies.</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT c.company_name, ROUND(AVG(p.package_lpa), 2) AS avg_package
+FROM placement p
+JOIN company c ON p.company_id = c.company_id
+GROUP BY c.company_name;</pre>
+        </div>
+
+        <!-- Query 10 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 10: Max and min stipend offered by a company</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">MAX &amp; MIN Aggregate</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Powers the stipend range comparison matrix showing highest and lowest compensation offered by employers.</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    c.company_name,
+    MAX(i.stipend) AS max_stipend,
+    MIN(i.stipend) AS min_stipend
+FROM internship i
+JOIN company c ON i.company_id = c.company_id
+GROUP BY c.company_name;</pre>
+        </div>
+
+        <!-- Query 11 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 11: Top 3 Tech Domains by Average Package</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">LIMIT 3 Ranking</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Ranks top tech domains: AI/ML (9.25 LPA), Big Data (8.50 LPA), and Cloud/DevOps (8.35 LPA).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    domain,
+    COUNT(placement_id) AS total_jobs,
+    ROUND(AVG(package_lpa), 2) AS avg_package_lpa
+FROM placement
+GROUP BY domain
+ORDER BY avg_package_lpa DESC
+LIMIT 3;</pre>
+        </div>
+
+        <!-- Query 12 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 12: Academic Tier Analysis (CGPA Brackets &amp; Selections)</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">CASE Bracket &amp; HAVING</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Tiers candidates into Honors (9.0+), Distinction (8.5 - 8.99), and First Class (&lt; 8.5).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    CASE 
+        WHEN COALESCE(s.graduation_cgpa, s.cgpa_12) >= 9.0 THEN 'Honors (9.0+ CGPA)'
+        WHEN COALESCE(s.graduation_cgpa, s.cgpa_12) >= 8.5 THEN 'Distinction (8.5 - 8.99 CGPA)'
+        ELSE 'First Class (< 8.5 CGPA)'
+    END AS academic_tier,
+    COUNT(DISTINCT s.student_id) AS total_students,
+    COUNT(CASE WHEN a.status = 'Selected' THEN 1 END) AS total_selections,
+    ROUND(AVG(COALESCE(s.graduation_cgpa, s.cgpa_12)), 2) AS avg_tier_cgpa
+FROM student s
+LEFT JOIN application a ON s.student_id = a.student_id
+GROUP BY academic_tier
+HAVING total_selections >= 1
+ORDER BY avg_tier_cgpa DESC;</pre>
+        </div>
+
+        <!-- Query 13 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 13: Students who did not apply for any internship or placement</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">LEFT JOIN / IS NULL</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Identifies disengaged students requiring faculty counseling (Kriti Arora, Manav Garg).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    s.student_id,
+    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+    s.department,
+    s.specialization,
+    s.email,
+    s.contact_no
+FROM student s
+LEFT JOIN application a ON s.student_id = a.student_id
+WHERE a.application_id IS NULL;</pre>
+        </div>
+
+        <!-- Query 14 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 14: List all students selected at both internship and placement (Dual Offers)</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">HAVING Clause</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Identifies top achievers with dual selections: Aman Sharma, Priya Singh, Simran Kaur, and Sahil Jain.</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    s.student_id,
+    CONCAT(s.first_name, ' ', s.last_name) AS student_name,
+    s.department,
+    s.specialization,
+    COUNT(CASE WHEN a.internship_id IS NOT NULL AND a.status = 'Selected' THEN 1 END) AS internships_selected,
+    COUNT(CASE WHEN a.placement_id IS NOT NULL AND a.status = 'Selected' THEN 1 END) AS placements_selected
+FROM student s
+JOIN application a ON s.student_id = a.student_id
+GROUP BY s.student_id, student_name, s.department, s.specialization
+HAVING internships_selected >= 1 AND placements_selected >= 1
+ORDER BY s.student_id ASC;</pre>
+        </div>
+
+        <!-- Query 15 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 15: Spread salary (Max - Min Package per Company)</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Salary Variance</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Measures salary range within each recruiter (DataSphere has highest spread of 1.70 LPA).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    c.company_name,
+    COUNT(p.placement_id) AS total_roles_offered,
+    MAX(p.package_lpa) AS highest_package_lpa,
+    MIN(p.package_lpa) AS lowest_package_lpa,
+    ROUND(MAX(p.package_lpa) - MIN(p.package_lpa), 2) AS package_spread_lpa
+FROM company c
+JOIN placement p ON c.company_id = p.company_id
+GROUP BY c.company_id, c.company_name
+HAVING COUNT(p.placement_id) > 1
+ORDER BY package_spread_lpa DESC;</pre>
+        </div>
+
+        <!-- Query 16 -->
+        <div class="sql-card p-4 bg-slate-950 rounded-xl border border-slate-800 space-y-1.5 hover:border-slate-700 transition">
+          <div class="flex justify-between items-center">
+            <span class="text-blue-400 font-bold text-xs">Query 16: Above Average Recruiters</span>
+            <span class="text-[10px] text-slate-500 uppercase bg-slate-900 px-2 py-0.5 rounded border border-slate-800">Correlated Subquery</span>
+          </div>
+          <p class="text-[11px] text-slate-400 font-sans">Filters companies whose average package exceeds university benchmark 7.48 LPA (AIgen, CloudVerse, CyberFort, DataSphere).</p>
+          <pre class="text-emerald-400 overflow-x-auto p-2.5 bg-slate-900/90 rounded-lg">SELECT 
+    c.company_name,
+    c.industry_type,
+    c.location,
+    ROUND(AVG(p.package_lpa), 2) AS company_avg_package,
+    (SELECT ROUND(AVG(package_lpa), 2) FROM placement) AS university_avg_package
+FROM company c
+JOIN placement p ON c.company_id = p.company_id
+GROUP BY c.company_id, c.company_name, c.industry_type, c.location
+HAVING AVG(p.package_lpa) > (SELECT AVG(package_lpa) FROM placement)
+ORDER BY company_avg_package DESC;</pre>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const allStudents = [
+      { id: 1, name: "Ritika Kalra", dob: "2002-06-15", age: 24, dept: "MCA", spec: "AI/ML", cgpa: "9.00", comp: "CloudVerse / DataSphere", role: "Cloud Engineer / Data Analyst", pay: "8.0 LPA / ₹9k", status: "Shortlisted", isSelected: false, isDual: false, isMca9: true, isIntern4: true, isInternApplied: true, tier: "Honors" },
+      { id: 2, name: "Aman Sharma", dob: "2001-09-20", age: 25, dept: "MCA", spec: "Data Science", cgpa: "8.90", comp: "CloudVerse Technologies", role: "DevOps Engineer", pay: "8.70 LPA", status: "Selected", isSelected: true, isDual: true, isMca9: false, isIntern4: true, isInternApplied: true, tier: "Distinction" },
+      { id: 3, name: "Neha Verma", dob: "2002-05-12", age: 24, dept: "MCA", spec: "Cloud Computing", cgpa: "9.20", comp: "DataSphere Solutions", role: "BI Associate", pay: "6.80 LPA", status: "Selected", isSelected: true, isDual: false, isMca9: true, isIntern4: false, isInternApplied: true, tier: "Honors" },
+      { id: 4, name: "Rohit Kumar", dob: "2001-11-02", age: 24, dept: "MCA", spec: "General", cgpa: "8.70", comp: "DataSphere Solutions", role: "BI Associate", pay: "6.80 LPA", status: "Shortlisted", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 5, name: "Priya Singh", dob: "2002-08-10", age: 24, dept: "MCA", spec: "AI/ML", cgpa: "9.10", comp: "TechNova Pvt Ltd", role: "Backend Developer", pay: "7.00 LPA", status: "Selected", isSelected: true, isDual: true, isMca9: true, isIntern4: false, isInternApplied: true, tier: "Honors" },
+      { id: 6, name: "Arjun Mehta", dob: "2001-02-21", age: 25, dept: "MCA", spec: "Data Science", cgpa: "8.80", comp: "DataSphere Solutions", role: "Data Analyst", pay: "7.20 LPA", status: "Applied", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 7, name: "Simran Kaur", dob: "2002-01-14", age: 24, dept: "MCA", spec: "Cloud Computing", cgpa: "9.10", comp: "VisionAR Studios", role: "VR Game Designer", pay: "7.80 LPA", status: "Selected", isSelected: true, isDual: true, isMca9: true, isIntern4: false, isInternApplied: true, tier: "Honors" },
+      { id: 8, name: "Vivek Gupta", dob: "2001-07-25", age: 25, dept: "MCA", spec: "General", cgpa: "8.60", comp: "VisionAR Studios", role: "VR Game Designer", pay: "7.80 LPA", status: "Shortlisted", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 9, name: "Tanya Malik", dob: "2003-03-18", age: 23, dept: "BCA", spec: "AR/VR", cgpa: "8.70", comp: "DataSphere Solutions", role: "Data Engineer", pay: "8.50 LPA", status: "Selected", isSelected: true, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 10, name: "Karan Sethi", dob: "2003-09-09", age: 23, dept: "BCA", spec: "UI/UX", cgpa: "8.00", comp: "CloudVerse Technologies", role: "DevOps Engineer", pay: "8.70 LPA", status: "Selected", isSelected: true, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "First Class" },
+      { id: 11, name: "Meena Joshi", dob: "2004-01-27", age: 22, dept: "BCA", spec: "Data Science", cgpa: "8.40", comp: "AIgen Labs", role: "ML Engineer", pay: "9.50 LPA", status: "Shortlisted", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "First Class" },
+      { id: 12, name: "Raj Bansal", dob: "2003-05-15", age: 23, dept: "BCA", spec: "AR/VR", cgpa: "8.50", comp: "DataSphere Solutions", role: "Data Engineer", pay: "8.50 LPA", status: "Selected", isSelected: true, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 13, name: "Anjali Nair", dob: "2003-04-02", age: 23, dept: "BCA", spec: "UI/UX", cgpa: "8.20", comp: "VisionAR Studios", role: "VR Game Designer", pay: "7.80 LPA", status: "Selected", isSelected: true, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "First Class" },
+      { id: 14, name: "Deepak Chauhan", dob: "2003-12-08", age: 22, dept: "BCA", spec: "Data Science", cgpa: "8.70", comp: "DataSphere Solutions", role: "Data Analyst", pay: "7.20 LPA", status: "Selected", isSelected: true, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 15, name: "Rashi Patel", dob: "2004-02-10", age: 22, dept: "BSc Computer Science", spec: "AI/ML", cgpa: "8.60", comp: "TechNova Pvt Ltd", role: "Backend Developer", pay: "7.00 LPA", status: "Rejected", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 16, name: "Sahil Jain", dob: "2004-07-12", age: 22, dept: "BSc Computer Science", spec: "Data Science", cgpa: "8.20", comp: "DataSphere Solutions", role: "Data Engineer", pay: "8.50 LPA", status: "Selected", isSelected: true, isDual: true, isMca9: false, isIntern4: false, isInternApplied: true, tier: "First Class" },
+      { id: 17, name: "Nisha Bora", dob: "2004-09-19", age: 22, dept: "BSc Computer Science", spec: "Cloud Computing", cgpa: "8.30", comp: "CloudVerse Technologies", role: "DevOps Engineer", pay: "8.70 LPA", status: "Selected", isSelected: true, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "First Class" },
+      { id: 18, name: "Harsh Yadav", dob: "2003-11-25", age: 22, dept: "BSc Computer Science", spec: "Cyber Security", cgpa: "8.50", comp: "AIgen Labs", role: "AI Engineer", pay: "9.00 LPA", status: "Shortlisted", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: true, tier: "Distinction" },
+      { id: 19, name: "Kriti Arora", dob: "2004-05-22", age: 22, dept: "BSc Computer Science", spec: "AI/ML", cgpa: "9.00", comp: "—", role: "Not Applied", pay: "—", status: "Unapplied", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: false, tier: "Honors" },
+      { id: 20, name: "Manav Garg", dob: "2004-08-11", age: 22, dept: "BSc Computer Science", spec: "Cloud Computing", cgpa: "8.00", comp: "—", role: "Not Applied", pay: "—", status: "Unapplied", isSelected: false, isDual: false, isMca9: false, isIntern4: false, isInternApplied: false, tier: "First Class" }
+    ];
+
+    let currentFilter = 'ALL';
+
+    function setFilter(type, btn) {
+      currentFilter = type;
+      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      applyFilters();
+    }
+
+    function applyFilters() {
+      const q = document.getElementById("searchBox").value.toLowerCase();
+      let filtered = allStudents;
+
+      if (currentFilter === 'Q2_INTERN_APPLIED') {
+        filtered = filtered.filter(s => s.isInternApplied);
+      } else if (currentFilter === 'Q5_INTERN_4') {
+        filtered = filtered.filter(s => s.isIntern4);
+      } else if (currentFilter === 'Q6_SELECTED') {
+        filtered = filtered.filter(s => s.status === 'Selected');
+      } else if (currentFilter === 'Q8_MCA_9') {
+        filtered = filtered.filter(s => s.isMca9);
+      } else if (currentFilter === 'Q12_TIER1') {
+        filtered = filtered.filter(s => s.tier === 'Honors');
+      } else if (currentFilter === 'Q13_UNAPPLIED') {
+        filtered = filtered.filter(s => s.status === 'Unapplied');
+      } else if (currentFilter === 'Q14_DUAL') {
+        filtered = filtered.filter(s => s.isDual);
+      }
+
+      if (q) {
+        filtered = filtered.filter(s => 
+          s.name.toLowerCase().includes(q) || 
+          s.dept.toLowerCase().includes(q) || 
+          s.comp.toLowerCase().includes(q) ||
+          s.role.toLowerCase().includes(q)
+        );
+      }
+
+      renderTable(filtered);
+    }
+
+    function renderTable(data) {
+      const tbody = document.getElementById("studentTableBody");
+      tbody.innerHTML = "";
+
+      data.forEach(s => {
+        let badge = "badge-applied";
+        if (s.status === "Selected") badge = "badge-selected";
+        else if (s.status === "Shortlisted") badge = "badge-shortlisted";
+        else if (s.status === "Rejected") badge = "badge-rejected";
+        else if (s.status === "Unapplied") badge = "badge-unapplied";
+
+        const tr = document.createElement("tr");
+        tr.className = "hover:bg-slate-800/50 transition-colors";
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-bold text-white">${s.name}</td>
+          <td class="py-3 px-4 text-slate-400 font-mono">${s.age} yrs</td>
+          <td class="py-3 px-4"><span class="font-medium text-slate-300">${s.dept}</span> <span class="text-slate-500 font-normal">• ${s.spec}</span></td>
+          <td class="py-3 px-4 font-mono font-bold text-blue-400">${s.cgpa} <span class="text-[10px] text-slate-500 font-sans">(${s.tier})</span></td>
+          <td class="py-3 px-4">
+            <div class="font-medium text-slate-200">${s.comp}</div>
+            <div class="text-[11px] text-slate-400">${s.role}</div>
+          </td>
+          <td class="py-3 px-4 font-bold text-emerald-400 font-mono">${s.pay}</td>
+          <td class="py-3 px-4 text-right">
+            <span class="px-2.5 py-0.5 rounded-full font-medium ${badge}">${s.status}</span>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById("tableCount").innerText = `Showing ${data.length} of ${allStudents.length} students`;
+    }
+
+    function toggleSqlModal() {
+      const modal = document.getElementById("sqlModal");
+      modal.classList.toggle("hidden");
+    }
+
+    function filterSqlQueries() {
+      const q = document.getElementById("sqlSearchBox").value.toLowerCase();
+      const cards = document.querySelectorAll(".sql-card");
+      cards.forEach(card => {
+        const text = card.innerText.toLowerCase();
+        if (text.includes(q)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    renderTable(allStudents);
+  </script>
+</body>
+</html>
